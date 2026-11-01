@@ -1,0 +1,46 @@
+{
+  "name": "security-audit-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) server for deep, evidence-based security audits and attacker simulations",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "security-audit-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "references",
+    "SKILL.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "audit",
+    "sast",
+    "dast",
+    "secrets",
+    "vibecoding",
+    "attacker-simulation"
+  ],
+  "author": "Security-Audit Authors",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
+

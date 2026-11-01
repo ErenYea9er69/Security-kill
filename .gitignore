@@ -1,0 +1,27 @@
+# Node dependencies and build artifacts
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test and coverage artifacts
+coverage/
+.superpowers/
+
+# Security reports and scan artifacts (must never be committed)
+SECURITY-AUDIT-*.md
+.tmp/
+tmp/
+*.poc.py
+*.poc.js
+*.poc.sh
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+

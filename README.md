@@ -5,21 +5,30 @@
 
 A Model Context Protocol (MCP) server that transforms any MCP-compatible AI assistant into an autonomous, evidence-graded security auditor and red-team simulator.
 
-Built on a 12-phase multi-specialist team architecture, this server provides the **`/security-audit`** prompt, automated execution tools (tool inventory preflight, project profiling & section mapping, redacted secret scanning, SAST, SCA, mathematical 0–10 scoring, and executive report generation), and on-demand access to 23 specialized security playbooks.
+Built on a **Tool-First, 12-phase multi-specialist team architecture**, this server enables AI agents to autonomously plan and execute audits, run scanner preflights, map blast radii, redact secrets, detect AI slop/fake tests, calculate mathematical 0–10 security scores, and generate executive-ready markdown reports.
+
+---
+
+## Why Tool-First?
+
+While traditional MCP setups rely on user-typed slash command prompts (e.g. `/security-audit`), **`security-audit-mcp` is engineered primarily around MCP Tools**:
+- **Autonomous Auto-Discovery:** Whenever a user naturally asks *"Audit my project"*, *"Is my auth code safe to ship?"*, or *"Check this repo for vulnerabilities"*, the AI autonomously invokes **`security_audit_orchestrate`** to generate its execution directive and team assignments.
+- **Universal IDE Compatibility:** Supported across 100% of MCP hosts (Cursor, Claude Desktop, Antigravity, Windsurf, Cline/Roo-Code, Zed, and OpenAI agents) even on clients with no prompt UI.
+- **Deterministic Guardrails:** Native code strictly redacts secrets before context ingestion, runs synthetic tool canaries, and computes exact mathematical scores without LLM arithmetic hallucinations.
 
 ---
 
 ## Key Features
 
-- **Prompt (`/security-audit`)**: Triggers an end-to-end security review directly inside your AI chat, supporting modes like `--quick`, `--secrets`, `--code`, `--deps`, `--config`, `--attack`, `--slop`, `--llm`, `--dast`, `--score-only`, `--fix`, and `--retest`.
-- **16 Specialist Teams (`references/teams.md`)**: Partitions the audit across dedicated roles (T01 Cartographer, T02 Identity, T03 Access, T04 Input, T05 Abuse, T06 Data, T07 Supply, T08 Infra, T09 Secrets, T10 AI, T11 Client, T12 Resilience, T13 Slop Hunters, T14 Red, T15 Fix, T16 Scorekeeper).
+- **Autonomous Orchestrator Tool (`security_audit_orchestrate`)**: Deploys a tailored 12-phase audit plan, assigning 16 specialist teams (T01 Cartographer to T16 Scorekeeper) and non-negotiable truth rules.
+- **AI Slop & Fake-Test Detection (`security_audit_slop_check`)**: Directly sweeps codebases for the 14 AI failure classes (S01–S14) in `references/slop-detection.md` (phantom sanitizers, default keys, empty catches, fake assertions, weak crypto).
 - **Mathematical 0–10 Scoring Engine (`security_audit_calculate_score`)**: Computes weighted team scores, weak-link blending, binding caps (e.g. live credentials cap at 3.0, proven criticals at 4.0), assurance percentages, slop score, and an actionable "Path to Target Score".
-- **AI Slop & Fake-Test Detection (`references/slop-detection.md`)**: Detects 14 failure classes (S01–S14) in AI-generated and vibe-coded codebases (phantom sanitizers, placeholder keys, empty catch blocks, mock-only tests, mutation checks).
 - **Preflight & Canaries (`security_audit_preflight`)**: Checks for 15+ CLI scanners (`semgrep`, `gitleaks`, `trufflehog`, `trivy`, `osv-scanner`, `grype`, `checkov`, `hadolint`, etc.) and verifies them against synthetic canaries.
 - **Strict Secret Redaction (`security_audit_scan_secrets`)**: Enforces that credentials never hit disk or context unredacted (masked to first 4 chars, e.g. `sk_l...`, `AKIA...`).
 - **Project Profiling & Section Mapping (`security_audit_section_map`)**: Identifies 12 domain packs (Fintech, Health, SaaS, E-commerce, etc.), detects BaaS (Supabase/Firebase) and LLM SDKs, discovers entry points, and assigns section ownership to specialist teams.
 - **Executive & Evidence-Graded Reporting (`security_audit_generate_report`)**: Automatically produces `SECURITY-AUDIT-<YYYY-MM-DD>.md` with a Scorecard, Verdict, Section Heat Map, Attack Paths, and auto-updates `.gitignore`.
 - **23 Knowledge Resources (`security://reference/{name}`)**: Serves deep playbooks for AI failure classes, prompt injection, supply chain worms, and polyglot stack checks across 12+ tech ecosystems.
+- **Optional Prompt (`/security-audit`)**: Kept for users who prefer initiating audits via manual slash commands in chat.
 
 ---
 
@@ -117,58 +126,39 @@ In your MCP settings tab:
 
 ---
 
-## Using `/security-audit`
-
-Once connected, invoke the `/security-audit` prompt from your AI chat:
-
-```text
-/security-audit
-```
-
-You can pass optional arguments to customize the audit run:
-
-| Argument | Type | Default | Description |
-|---|---|---|---|
-| `target_path` | string | `.` | Directory path of the repository to audit. |
-| `mode` | string | `full` | Audit mode: `full`, `quick`, `secrets`, `code`, `deps`, `config`, `attack`, `slop`, `llm`, `dast`, `score-only`, `fix`, `retest`. |
-| `depth` | string | `standard` | Depth tier: `quick` (fast read), `standard` (default), or `deep` (full proofs & mutation checks). |
-| `domain` | string | `auto-detect`| Domain focus: `payments`, `health`, `saas`, `ecommerce`, `ai`, etc. |
-| `teams` | string | `all` | Specific specialist team IDs (e.g. `T02,T03,T09`). |
-| `compliance` | boolean | `false` | Whether to append compliance evidence mappings (SOC 2, ISO 27001, HIPAA, PCI-DSS). |
-| `diff` | boolean | `false` | Scope audit strictly to git diff against base branch. |
-
----
-
 ## Tools Reference
 
-The server exposes the following MCP tools for automated execution:
+The server exposes the following 10 MCP tools for automated execution:
 
-1. **`security_audit_preflight`**
-   - Discovers installed security scanners (`semgrep`, `gitleaks`, `trufflehog`, `trivy`, `osv-scanner`, `grype`, `checkov`, `hadolint`, etc.).
-   - Can run synthetic non-destructive canaries to verify scanner health.
+1. **`security_audit_orchestrate`** *(Tool-First Entry Point)*
+   - Analyzes target codebase and outputs a step-by-step 12-phase audit plan, team roster assignments, truth rules, and recommended tool calls.
 
-2. **`security_audit_section_map`**
+2. **`security_audit_slop_check`**
+   - Directly sweeps source files for the 14 AI failure classes (S01–S14) in `references/slop-detection.md` (phantom sanitizers, placeholder residue, empty catches, fake assertions, weak crypto, linter suppressions).
+
+3. **`security_audit_section_map`**
    - Discovers entry points, frameworks, BaaS platforms (Supabase/Firebase), domain packs, and maps sections with owner teams (`T01` to `T13`).
 
-3. **`security_audit_scan_secrets`**
-   - Scans code, git history, and built bundles for exposed credentials.
-   - Enforces strict secret masking (first 4 characters only).
+4. **`security_audit_preflight`**
+   - Discovers installed security scanners (`semgrep`, `gitleaks`, `trufflehog`, `trivy`, `osv-scanner`, `grype`, `checkov`, `hadolint`, etc.) and tests them with synthetic non-destructive canaries.
 
-4. **`security_audit_sast`**
+5. **`security_audit_scan_secrets`**
+   - Scans code, git history, and built bundles for exposed credentials with mandatory redaction (masked to first 4 chars).
+
+6. **`security_audit_sast`**
    - Runs Semgrep or built-in dangerous sink pattern matching (eval, command execution, unparameterized SQL).
 
-5. **`security_audit_scan_deps`**
+7. **`security_audit_scan_deps`**
    - Checks dependency manifests (`package.json`, `requirements.txt`, etc.) for known CVE advisories.
 
-6. **`security_audit_calculate_score`**
-   - Computes the 0–10 score, binding caps, assurance ceiling, team scores, slop score, and remediation roadmap.
+8. **`security_audit_calculate_score`**
+   - Computes the mathematical 0–10 score, binding caps, assurance ceiling, team scores, slop score, and remediation roadmap.
 
-7. **`security_audit_get_reference`**
-   - Retrieves any of the 23 security playbooks by name.
+9. **`security_audit_generate_report`**
+   - Writes `SECURITY-AUDIT-<YYYY-MM-DD>.md` in the project root with the executive scorecard, section heat map, attack paths, and limitation statements. Auto-updates `.gitignore`.
 
-8. **`security_audit_generate_report`**
-   - Writes `SECURITY-AUDIT-<YYYY-MM-DD>.md` in the project root with the executive scorecard, section heat map, attack paths, and limitation statements.
-   - Automatically adds report patterns to `.gitignore`.
+10. **`security_audit_get_reference`**
+    - Retrieves any of the 23 security playbooks and team cards by name on demand.
 
 ---
 

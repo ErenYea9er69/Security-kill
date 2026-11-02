@@ -30,11 +30,13 @@ describe('MCP Server & Prompts Suite', () => {
     assert.ok(server);
     // Verify server has internal registrations
     const registeredTools = (server as any)._registeredTools;
+    assert.ok(registeredTools['security_audit_orchestrate']);
     assert.ok(registeredTools['security_audit_preflight']);
     assert.ok(registeredTools['security_audit_section_map']);
     assert.ok(registeredTools['security_audit_scan_secrets']);
     assert.ok(registeredTools['security_audit_sast']);
     assert.ok(registeredTools['security_audit_scan_deps']);
+    assert.ok(registeredTools['security_audit_slop_check']);
     assert.ok(registeredTools['security_audit_calculate_score']);
     assert.ok(registeredTools['security_audit_generate_report']);
     assert.ok(registeredTools['security_audit_get_reference']);

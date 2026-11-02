@@ -8,6 +8,8 @@ import { runSectionMap } from '../src/tools/sectionMap.js';
 import { runPreflight } from '../src/tools/preflight.js';
 import { generateAuditReport } from '../src/tools/reporter.js';
 import { calculateSecurityScore } from '../src/tools/scoring.js';
+import { orchestrateAudit } from '../src/tools/orchestrator.js';
+import { runSlopScan } from '../src/tools/slop.js';
 
 describe('Security Tools Suite', () => {
   let tempDir: string;
@@ -22,6 +24,65 @@ describe('Security Tools Suite', () => {
     } catch {
       // ignore cleanup errors
     }
+  });
+
+  describe('Autonomous Audit Orchestrator Tool', () => {
+    it('should generate an autonomous audit execution plan and directives', async () => {
+      const plan = await orchestrateAudit({
+        targetPath: tempDir,
+        mode: 'quick',
+        depth: 'standard',
+        domain: 'fintech',
+      });
+
+      assert.ok(plan);
+      assert.strictEqual(plan.mode, 'quick');
+      assert.strictEqual(plan.depth, 'standard');
+      assert.strictEqual(plan.domain, 'fintech');
+      assert.ok(plan.executionPhases.length >= 10);
+      assert.ok(plan.truthRules.length >= 5);
+      assert.match(plan.directive, /Autonomous Security Audit Directive/);
+      assert.ok(plan.executionPhases.some((p) => p.name.includes('Tool Inventory')));
+    });
+  });
+
+  describe('AI Slop & Fake Test Checker Tool', () => {
+    it('should detect phantom guards, empty catches, and fake assertions', async () => {
+      const slopDir = path.join(tempDir, 'slop-test');
+      fs.mkdirSync(slopDir);
+
+      // Create a file with phantom guard and swallowed error
+      fs.writeFileSync(
+        path.join(slopDir, 'guard.js'),
+        `
+function sanitizeInput(data) {
+  return data;
+}
+
+try {
+  verifyToken();
+} catch {}
+        `,
+        'utf-8'
+      );
+
+      // Create a test file with assertion theater
+      fs.writeFileSync(
+        path.join(slopDir, 'auth.test.js'),
+        `
+test('admin access test', () => {
+  expect(true).toBe(true);
+});
+        `,
+        'utf-8'
+      );
+
+      const result = await runSlopScan(slopDir);
+      assert.ok(result.leads.length >= 3);
+      assert.ok(result.leads.some((l) => l.classId === 'S01'));
+      assert.ok(result.leads.some((l) => l.classId === 'S05'));
+      assert.ok(result.leads.some((l) => l.classId === 'S06'));
+    });
   });
 
   describe('Secret Redaction & Scanning', () => {

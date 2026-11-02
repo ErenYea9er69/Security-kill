@@ -14,6 +14,8 @@ import {
   runDepsScan,
   calculateSecurityScore,
   generateAuditReport,
+  orchestrateAudit,
+  runSlopScan,
 } from './tools/index.js';
 import { generateAuditPromptContent } from './prompts.js';
 
@@ -26,9 +28,7 @@ export function createServer(): McpServer {
     version: '1.0.0',
   });
 
-  // ==========================================
-  // 1. Prompts (/security-audit)
-  // ==========================================
+
   server.prompt(
     'security-audit',
     'Execute an evidence-based security audit using 16 specialist teams, attacker simulation, and 0-10 scoring',
@@ -88,6 +88,26 @@ export function createServer(): McpServer {
   // ==========================================
   // 3. Tools
   // ==========================================
+
+  // Tool: Orchestrate / Plan Audit (Tool-first autonomous entry point)
+  server.tool(
+    'security_audit_orchestrate',
+    'Generates a complete, tailored 12-phase security audit execution plan, specialist team assignments, truth rules, and recommended tool sequence',
+    {
+      targetPath: z.string().default('.').describe('Root path of the repository to audit'),
+      mode: z.string().default('full').describe('Audit mode: full, quick, secrets, code, deps, config, attack, slop, llm, dast, score-only, fix, retest'),
+      depth: z.enum(['quick', 'standard', 'deep']).default('standard').describe('Depth tier: quick, standard, or deep'),
+      domain: z.string().optional().describe('Optional domain override (payments, health, saas, ecommerce, ai)'),
+      compliance: z.boolean().optional().describe('Enable compliance evidence mapping'),
+      diff: z.boolean().optional().describe('Scope audit to git diff against base branch'),
+    },
+    async (args) => {
+      const result = await orchestrateAudit(args);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      };
+    }
+  );
 
   // Tool: Preflight Check
   server.tool(
@@ -161,6 +181,21 @@ export function createServer(): McpServer {
     },
     async ({ targetPath }) => {
       const result = await runDepsScan(targetPath);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      };
+    }
+  );
+
+  // Tool: AI Slop & Fake Test Checker (Phase 6d, Team T13 Slop Hunters)
+  server.tool(
+    'security_audit_slop_check',
+    'Sweeps codebase for the 14 AI failure classes (S01-S14) in references/slop-detection.md (phantom guards, placeholder residue, empty catches, fake assertions, weak crypto)',
+    {
+      targetPath: z.string().default('.').describe('Directory path of the project to scan for slop'),
+    },
+    async ({ targetPath }) => {
+      const result = await runSlopScan(targetPath);
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
       };

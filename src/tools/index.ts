@@ -1,3 +1,5 @@
+export * from './orchestrator.js';
+export * from './slop.js';
 export * from './scoring.js';
 export * from './preflight.js';
 export * from './sectionMap.js';

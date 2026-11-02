@@ -371,3 +371,4 @@ export function calculateSecurityScore(options: ScoreCalculationOptions): ScoreR
     pathToTarget,
   };
 }
+

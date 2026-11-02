@@ -1,7 +1,6 @@
 ---
 name: security-audit
-description: Use when the user asks for a security review, security audit, security score or rating, threat model, red-team pass, attack simulation, vulnerability scan, secret scan, dependency or CVE check, OWASP review, AI-code or vibe-coded app review, compliance evidence, or "is this safe to ship". Profiles the project, assembles a roster of specialist teams (identity, access, input, abuse, data, supply chain, infra, secrets, AI, client, resilience, AI-slop hunters), has each team play a human attacker and an autonomous AI attack agent against its own sections, proves attack paths with safe local tests, runs real scanners, fixes root causes with regression tests, re-attacks the fixes, and reports a score out of 10 with an assurance level, section heat map and path to a better score.
-allowed-tools: Read, Grep, Glob, Bash, Write, Edit, Agent, WebSearch, WebFetch, TodoWrite
+description: "Use when the user asks for a security review, security audit, security score or rating, threat model, red-team pass, attack simulation, vulnerability scan, secret scan, dependency or CVE check, OWASP review, AI-code or vibe-coded app review, compliance evidence, or is this safe to ship."
 ---
 
 # Security Audit

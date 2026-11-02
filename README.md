@@ -28,7 +28,7 @@ While traditional MCP setups rely on user-typed slash command prompts (e.g. `/se
 - **Project Profiling & Section Mapping (`security_audit_section_map`)**: Identifies 12 domain packs (Fintech, Health, SaaS, E-commerce, etc.), detects BaaS (Supabase/Firebase) and LLM SDKs, discovers entry points, and assigns section ownership to specialist teams.
 - **Executive & Evidence-Graded Reporting (`security_audit_generate_report`)**: Automatically produces `SECURITY-AUDIT-<YYYY-MM-DD>.md` with a Scorecard, Verdict, Section Heat Map, Attack Paths, and auto-updates `.gitignore`.
 - **23 Knowledge Resources (`security://reference/{name}`)**: Serves deep playbooks for AI failure classes, prompt injection, supply chain worms, and polyglot stack checks across 12+ tech ecosystems.
-- **Optional Prompt (`/security-audit`)**: Kept for users who prefer initiating audits via manual slash commands in chat.
+- **100% Tool-First Autonomous Architecture**: No manual slash commands or prompts required; agents discover and invoke audit tools directly via MCP.
 
 ---
 

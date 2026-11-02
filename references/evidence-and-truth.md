@@ -1,5 +1,7 @@
 # Evidence and Truth
 
+Team owner: every team. T16 Scorekeeper enforces it.
+
 Read this before you write any version, CVE id, flag, exit code or number into a report. It holds the evidence grades, the lookup procedure for volatile facts, and a dated ledger.
 
 ## Evidence grades
@@ -99,6 +101,16 @@ Each row was read from a source in the preparation of this edition. Facts older 
 | April 2026: a Cursor agent using Claude Opus 4.6 deleted PocketOS production data and volume backups through one Railway API call, using an unrelated token with broad scope. Backups sat on the same volume. A 30-hour outage followed, and data was later partly recovered. | PC Gamer, Computing, ACS and other reports of the founder's post | |
 | Agent skill registries held malicious skills in early 2026. Koi Security reported 341 of 2,857 ClawHub skills malicious. A Snyk audit of 3,984 skills found 76 confirmed malicious. An academic study found 26.1% of sampled skills had at least one vulnerability. | Koi, Snyk and an arXiv paper via secondary summaries | Sample methods differ. Do not combine the numbers. |
 | Check Point disclosed configuration injection flaws in Claude Code (CVE-2025-59536) in February 2026. | Secondary report | Verify on the CVE record. |
+
+### Added on 2026-11-01 for the team and scoring edition
+
+| Fact | Source | Notes |
+|---|---|---|
+| Veracode 2026 GenAI Code Security Report (published 2026-07-28 per one report): more than 100 models, average security pass rate about 56 percent, syntax pass rate near 100 percent. XSS passed about 15 percent and log injection about 12 percent. Python 63 percent, Java 30 percent. Reasoning models 56 percent against 51 percent for others. | Veracode release, SD Times, eSecurity Planet | Vendor data from raw models with no guardrails. Veracode and the press both warn against reading it as a production defect rate. Use as priors only. |
+| OWASP ASVS 5.0.0 was released in 2025-05, with 17 chapters, about 350 requirements and three levels. Chapters V1 Encoding and Sanitization, V2 Validation and Business Logic, V3 Web Frontend Security, V4 API and Web Service, V5 File Handling, V9 Self-Contained Tokens, V10 OAuth and OIDC, V17 WebRTC are confirmed by name. | arc42 quality model page, AppKnox, SoftwareMill | Other chapter names not re-fetched. |
+| CVSS 4.0 was published in November 2023. EPSS estimates the probability of exploitation within 30 days and updates daily. CISA KEV lists vulnerabilities confirmed as exploited. Each measures a different thing, and a combined view beats any single score. | ManageEngine explainer, vendor and research notes | Secondary. Confirm the EPSS API endpoint on the FIRST site before use. |
+| The OWASP API Security Top 10 2023 edition was still the latest as of February 2026. | A secondary guide | Check the OWASP page for a newer edition. |
+| Research on multi-agent vulnerability detection: VulAgent (ACL 2026 Findings) activates specialist analyzers and validates each hypothesis separately, and its authors report about 36 percent fewer false positives than baselines. MultiVer (ICML 2026) reports an ensemble adds 17 points of recall over single-agent security analysis. QASecClaw (arXiv, 2026-05) reports an LLM filter over Semgrep cut false positives from 560 to 64 with a 3.1 percent recall loss on its benchmark. | Papers and preprints | Results hold on their own benchmarks. Do not quote them as general rates. They support the design, nothing more. |
 
 ## Carried from the earlier edition and not re-verified
 

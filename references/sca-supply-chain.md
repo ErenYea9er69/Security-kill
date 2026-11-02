@@ -1,5 +1,7 @@
 # Dependencies and Supply Chain
 
+Team owner: T07 Supply.
+
 Read this in Phase 4. A CVE list is the smallest part of the risk. Since 2025, registry worms, hijacked releases and fake packages have caused most of the real damage. Read `agent-config-and-worms.md` alongside this file.
 
 ## Contents

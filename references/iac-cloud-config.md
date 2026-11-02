@@ -1,5 +1,7 @@
 # IaC, Containers, CI Workflows and Web Config
 
+Team owner: T08 Infra, with T07 Supply for CI workflows.
+
 Read this in Phase 5. Configuration is where AI-built apps fail most, and code scanners do not see it.
 
 ## Contents

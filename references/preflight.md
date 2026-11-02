@@ -1,5 +1,7 @@
 # Preflight: Canary Verification and Docker Fallback
 
+Team owner: the Orchestrator.
+
 Read this in Phase 1. A tool on the PATH is not a working tool. A Semgrep install has failed on every current rule and still passed a `command -v` check. Test each tool against a known-bad canary before you report the inventory. When a host install is broken, use the official Docker image.
 
 ## Inventory loop

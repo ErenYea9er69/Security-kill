@@ -18,11 +18,11 @@ describe('MCP Server & Prompts Suite', () => {
     assert.match(text, /\*\*Target Path:\*\* \.\/src-app/);
     assert.match(text, /\*\*Mode:\*\* quick/);
     assert.match(text, /Truth Rules/i);
-    assert.match(text, /Untrusted Repository Rule/i);
-    assert.match(text, /Phase 0: Recon and Section Map/i);
+    assert.match(text, /Untrusted/i);
+    assert.match(text, /Phase 0: Profile, Roster/i);
     assert.match(text, /\*\*Compliance Mapping:\*\* Enabled/);
     assert.match(text, /Master Skill Specification/);
-    assert.match(text, /## What an attacker does, and what you do about it/);
+    assert.match(text, /## How the audit works/);
   });
 
   it('should instantiate McpServer with registered tools, prompts, and resources', () => {
@@ -35,6 +35,7 @@ describe('MCP Server & Prompts Suite', () => {
     assert.ok(registeredTools['security_audit_scan_secrets']);
     assert.ok(registeredTools['security_audit_sast']);
     assert.ok(registeredTools['security_audit_scan_deps']);
+    assert.ok(registeredTools['security_audit_calculate_score']);
     assert.ok(registeredTools['security_audit_generate_report']);
     assert.ok(registeredTools['security_audit_get_reference']);
 

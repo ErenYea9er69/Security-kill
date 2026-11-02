@@ -1,5 +1,7 @@
 # Credential Rotation
 
+Team owner: T09 Secrets and T15 Fix.
+
 Read this when the audit found a live credential. Hand the user the steps for their provider. Generic advice wastes the hours which matter.
 
 Rotate first, scrub second. People get this backwards. They rewrite git history, feel finished, and leave a working credential in an attacker's hands. Removing a secret from history does not change whether it still authenticates. Until the provider revokes it, it is compromised. Exposed cloud keys have produced large bills within hours of publication.

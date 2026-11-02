@@ -1,5 +1,7 @@
 # Fix Patterns and Regression Tests
 
+Team owner: T15 Fix.
+
 Read this in Phase 10. A fix closes the flaw at its root, and a regression test replays the attack. Every pattern below shows the shared choke point first. Snippets are short examples. Adapt names to the project, check library APIs against the installed version, and run the test suite after each change.
 
 ## Contents

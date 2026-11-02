@@ -1,5 +1,7 @@
 # Supabase and Firebase Verification
 
+Team owner: T03 Access, with T08 Infra for platform settings.
+
 Read this in Phase 5 when either platform appears. It is the highest-value check in this pack. With these platforms the browser talks to the database directly, so the policy layer is the only wall. A public key plus a missing or permissive policy returns every row to anyone.
 
 Verify enforcement. Never accept "RLS is enabled" as an answer. RLS enabled with a permissive policy, or without `FORCE` where an owner path exists, is as good as off.

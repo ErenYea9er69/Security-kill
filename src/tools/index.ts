@@ -1,3 +1,4 @@
+export * from './scoring.js';
 export * from './preflight.js';
 export * from './sectionMap.js';
 export * from './secrets.js';

@@ -1,5 +1,7 @@
 # Compliance Mapping Reference
 
+Team owner: T16 Scorekeeper.
+
 Read this in Phase 9, when the user asks for `--compliance`. It maps findings to framework controls so the report carries an evidence appendix.
 
 ## Contents

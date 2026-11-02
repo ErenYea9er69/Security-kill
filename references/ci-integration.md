@@ -1,5 +1,7 @@
 # Wiring Scanning Into CI and Pre-Commit
 
+Team owner: T07 Supply and T08 Infra.
+
 Read this when the user wants scanning to run on its own. The rule for an existing project: freeze the past, block the future. Never start by failing the build on hundreds of old findings. The team switches the whole thing off within a week.
 
 Release tags, versions and action names change. This edition lists none as current. Resolve each one in the session, as shown below, and write a full commit SHA into every `uses:` line.

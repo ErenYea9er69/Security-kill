@@ -1,5 +1,7 @@
 # Agent Configuration, Skills, MCP and Install-Time Attacks
 
+Team owner: T10 AI and T07 Supply.
+
 Read this in Phase 4 and Phase 6c. AI coding agents read files in your repo and run commands from them. Registry worms run code at install time. In 2026 both attack surfaces produced real incidents (see the dated ledger in `evidence-and-truth.md`). Scanners built for application code miss most of this.
 
 ## Contents

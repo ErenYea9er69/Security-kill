@@ -7,6 +7,7 @@ import { redactSecret, scanSecrets } from '../src/tools/secrets.js';
 import { runSectionMap } from '../src/tools/sectionMap.js';
 import { runPreflight } from '../src/tools/preflight.js';
 import { generateAuditReport } from '../src/tools/reporter.js';
+import { calculateSecurityScore } from '../src/tools/scoring.js';
 
 describe('Security Tools Suite', () => {
   let tempDir: string;
@@ -55,15 +56,15 @@ describe('Security Tools Suite', () => {
     });
   });
 
-  describe('Section Mapping', () => {
-    it('should analyze project structure and detect manifest & entrypoints', async () => {
+  describe('Section Mapping & Project Profiling', () => {
+    it('should analyze project structure, assign teams, and detect domain', async () => {
       const mockProject = path.join(tempDir, 'proj');
       fs.mkdirSync(mockProject);
       fs.writeFileSync(
         path.join(mockProject, 'package.json'),
         JSON.stringify({
           name: 'mock-app',
-          dependencies: { '@supabase/supabase-js': '^2.0.0', 'express': '^4.18.0' },
+          dependencies: { '@supabase/supabase-js': '^2.0.0', 'express': '^4.18.0', 'stripe': '^12.0.0' },
         })
       );
       fs.mkdirSync(path.join(mockProject, 'src'));
@@ -75,7 +76,10 @@ describe('Security Tools Suite', () => {
       const map = await runSectionMap(mockProject);
       assert.ok(map.languages.includes('JavaScript/TypeScript'));
       assert.ok(map.backendPlatforms.includes('Supabase'));
-      assert.ok(map.sections.some((s) => s.name === 'Authentication & Authorization'));
+      assert.strictEqual(map.domain, 'Payments and Fintech');
+      assert.ok(map.sections.some((s) => s.ownerTeam === 'T02' && s.name.includes('Authentication')));
+      assert.ok(map.sections.some((s) => s.ownerTeam === 'T05' && s.name.includes('Payments')));
+      assert.ok(map.activeRoster.some((r) => r.id === 'T05'));
     });
   });
 
@@ -89,8 +93,94 @@ describe('Security Tools Suite', () => {
     });
   });
 
+  describe('Mathematical Scoring Engine', () => {
+    it('should reproduce the worked example from references/scoring.md', () => {
+      const result = calculateSecurityScore({
+        findings: [
+          {
+            id: 'F-01',
+            team: 'T03',
+            severity: 'CRITICAL',
+            evidence: 'PROVEN',
+            reach: 'authenticated',
+            asset: 'personal_data',
+            rootCauseGroup: 'authz-root',
+          },
+          {
+            id: 'F-02',
+            team: 'T03',
+            severity: 'HIGH',
+            evidence: 'PROVEN',
+            reach: 'authenticated',
+            asset: 'personal_data',
+            rootCauseGroup: 'authz-root',
+          },
+          {
+            id: 'F-03',
+            team: 'T02',
+            severity: 'HIGH',
+            evidence: 'TRACED',
+            reach: 'anonymous',
+            asset: 'money_credentials_rce_db',
+          },
+          {
+            id: 'F-04',
+            team: 'T04',
+            severity: 'MEDIUM',
+            evidence: 'PROVEN',
+            reach: 'authenticated',
+            asset: 'low_value',
+          },
+          {
+            id: 'F-05',
+            team: 'T07',
+            severity: 'MEDIUM',
+            evidence: 'TRACED',
+            reach: 'anonymous',
+            asset: 'low_value',
+          },
+          {
+            id: 'F-06',
+            team: 'T08',
+            severity: 'LOW',
+            evidence: 'PROVEN',
+            reach: 'anonymous',
+            asset: 'low_value',
+          },
+        ],
+        coverage: {
+          completedSectionsWeight: 8,
+          totalSectionsWeight: 10,
+          resolvedHypotheses: 3,
+          totalHypotheses: 4,
+          passingTools: 9,
+          totalApplicableTools: 10,
+          verifiedCriticalHigh: 3,
+          totalCriticalHigh: 3,
+        },
+      });
+
+      // Team scores: T03 6.4, T02 8.0, T04 9.6, T07 9.6, T08 9.9
+      assert.strictEqual(result.teamScores['T03'], 6.4);
+      assert.strictEqual(result.teamScores['T02'], 8.0);
+      assert.strictEqual(result.teamScores['T04'], 9.6);
+      assert.strictEqual(result.teamScores['T07'], 9.6);
+      assert.strictEqual(result.teamScores['T08'], 9.9);
+
+      // Binding cap: PROVEN Critical (F-01) caps at 4.0
+      assert.strictEqual(result.overallScore, 4.0);
+      assert.strictEqual(result.band, 'Weak');
+      assert.strictEqual(result.assurance.level, 'High');
+      assert.strictEqual(result.assurance.score, 84);
+      assert.ok(result.bindingCap?.includes('PROVEN Critical (F-01)'));
+
+      // Path to target score exists
+      assert.ok(result.pathToTarget.length >= 2);
+    });
+  });
+
   describe('Report Generator', () => {
-    it('should generate standardized SECURITY-AUDIT-YYYY-MM-DD.md and update .gitignore', async () => {
+    it('should generate standardized SECURITY-AUDIT-YYYY-MM-DD.md with scorecard and update .gitignore', async () => {
       const repDir = path.join(tempDir, 'rep-proj');
       fs.mkdirSync(repDir);
       fs.writeFileSync(path.join(repDir, '.gitignore'), 'node_modules/\n');
@@ -98,7 +188,22 @@ describe('Security Tools Suite', () => {
       const reportResult = await generateAuditReport({
         targetPath: repDir,
         projectName: 'Test Project',
+        depthTier: 'standard',
         verdict: 'Not safe to ship. High risk of data exposure.',
+        scorecard: {
+          securityScore: 4.0,
+          band: 'Weak',
+          assuranceLevel: 'High',
+          assuranceNumber: 84,
+          ceiling: 9.5,
+          slopScore: 8.5,
+          bindingCap: 'PROVEN Critical (F-01)',
+          teamScores: { T02: 8.0, T03: 6.4 },
+        },
+        sectionHeatMap: [
+          { id: 'S01', name: 'Identity', ownerTeam: 'T02', score: 8.0 },
+          { id: 'S02', name: 'Access', ownerTeam: 'T03', score: 6.4, topFinding: 'F-01' },
+        ],
         attackPaths: ['Attacker accesses unprotected Supabase table.'],
         findings: [
           {
@@ -106,6 +211,7 @@ describe('Security Tools Suite', () => {
             severity: 'CRITICAL',
             title: 'Missing Row Level Security on orders table',
             where: 'supabase/migrations/001.sql:10',
+            team: 'T03',
             attacker: 'Anonymous client',
             evidence: 'PROVEN',
             owasp: 'A01:2025 Broken Access Control',
@@ -113,11 +219,24 @@ describe('Security Tools Suite', () => {
             exploit: 'curl https://supabase.co/rest/v1/orders returns all tenant records.',
             fix: 'ALTER TABLE orders ENABLE ROW LEVEL SECURITY;',
             regressionTest: 'tests/orders_rls.test.sql',
+            siblings: 0,
+            penalty: '3.2',
+          },
+        ],
+        slopFindings: [
+          {
+            id: 'SLOP-01',
+            classId: 'S01',
+            title: 'Phantom sanitizer in auth route',
+            where: 'src/auth.ts:25',
+            team: 'T02',
+            description: 'Function sanitizeUser returns raw input without escaping.',
           },
         ],
         notFindings: ['Reviewed JWT decoding, verification is present.'],
         notVerified: ['Rate limiting on login endpoint not proven due to no live server.'],
         coverage: {
+          roster: ['T01', 'T02', 'T03', 'T09', 'T13'],
           sectionsAttacked: ['Auth', 'Database'],
           sectionsSkipped: ['Payments'],
           toolsRun: ['Semgrep (OK)', 'Gitleaks (OK)'],
@@ -127,9 +246,14 @@ describe('Security Tools Suite', () => {
       assert.ok(fs.existsSync(reportResult.reportPath));
       const content = fs.readFileSync(reportResult.reportPath, 'utf-8');
       assert.match(content, /# Security Audit: Test Project/);
+      assert.match(content, /## Scorecard/);
+      assert.match(content, /Security score: 4\.0 \/ 10/);
       assert.match(content, /## Verdict/);
+      assert.match(content, /## Section heat map/);
       assert.match(content, /## Attack paths/);
       assert.match(content, /\[CRITICAL\] F-01 Missing Row Level Security/);
+      assert.match(content, /## Slop findings/);
+      assert.match(content, /\[S01\] SLOP-01/);
       assert.match(content, /## Limitations/);
 
       // Verify .gitignore was updated

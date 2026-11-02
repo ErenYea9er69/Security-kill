@@ -1,5 +1,7 @@
 # Stack-Specific Checks
 
+Team owner: T08 Infra, T04 Input and T11 Client, by section.
+
 Concrete checks for the stacks seen most often. Run the section matching what Phase 0 found. Commands use ripgrep (`rg`). The Grep tool takes the same regexes.
 
 Version floors are not in this file. They moved twice between the first and last draft of this edition. Before any version judgment, run the lookup procedure in `evidence-and-truth.md` and write the fixed version, source and fetch date into the report. The dated ledger there lists what was true on 2026-10-31.

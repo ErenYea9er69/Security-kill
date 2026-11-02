@@ -1,5 +1,7 @@
 # Section Playbooks
 
+Team owner: each team reads the playbooks for its own sections (see `teams.md`).
+
 Read this in Phase 6. Find the section type you are attacking. Run its moves. For each move, find the guard in the code and read it. Mark the move Blocked, Open or Unknown, as the Attack Card requires.
 
 Each playbook lists the attacker goal, the moves, what to read, and a safe proof. Proof requests run only on a local or disposable instance with seeded test data (see `dast-and-authz.md`).

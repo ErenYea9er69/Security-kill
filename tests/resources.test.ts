@@ -8,15 +8,21 @@ import {
 } from '../src/resources.js';
 
 describe('MCP Resources & References Loader', () => {
-  it('should list all 17 reference names', () => {
+  it('should list all 23 reference names', () => {
     const refs = listReferences();
-    assert.strictEqual(refs.length, 17);
+    assert.strictEqual(refs.length, 23);
     assert.ok(refs.includes('preflight'));
     assert.ok(refs.includes('sast-secrets'));
     assert.ok(refs.includes('vibecoding-checklist'));
     assert.ok(refs.includes('attacker-simulation'));
     assert.ok(refs.includes('baas-supabase-firebase'));
     assert.ok(refs.includes('llm-app-security'));
+    assert.ok(refs.includes('teams'));
+    assert.ok(refs.includes('scoring'));
+    assert.ok(refs.includes('slop-detection'));
+    assert.ok(refs.includes('project-profiling'));
+    assert.ok(refs.includes('stack-packs'));
+    assert.ok(refs.includes('report-template'));
   });
 
   it('should load content for an existing reference', () => {
@@ -38,16 +44,20 @@ describe('MCP Resources & References Loader', () => {
 
   it('should produce valid MCP resource descriptors', () => {
     const resources = getAllReferenceResources();
-    assert.strictEqual(resources.length, 18); // 17 references + 1 core skill
+    assert.strictEqual(resources.length, 24); // 23 references + 1 core skill
 
     const skillRes = resources.find((r) => r.uri === 'security://skill');
     assert.ok(skillRes);
     assert.strictEqual(skillRes.mimeType, 'text/markdown');
 
-    const preflightRes = resources.find((r) => r.uri === 'security://reference/preflight');
-    assert.ok(preflightRes);
-    assert.strictEqual(preflightRes.name, 'preflight');
-    assert.strictEqual(preflightRes.mimeType, 'text/markdown');
+    const teamsRes = resources.find((r) => r.uri === 'security://reference/teams');
+    assert.ok(teamsRes);
+    assert.strictEqual(teamsRes.name, 'teams');
+    assert.strictEqual(teamsRes.mimeType, 'text/markdown');
+
+    const scoringRes = resources.find((r) => r.uri === 'security://reference/scoring');
+    assert.ok(scoringRes);
+    assert.strictEqual(scoringRes.name, 'scoring');
+    assert.strictEqual(scoringRes.mimeType, 'text/markdown');
   });
 });
-

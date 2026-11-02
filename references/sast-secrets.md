@@ -1,5 +1,7 @@
 # SAST and Secret Scanning
 
+Team owner: T09 Secrets (secret scanning), T04 Input (SAST).
+
 Tool syntax for Phases 2 and 3. Flags changed recently in gitleaks and Semgrep, and many blog posts are stale. Treat every flag here as "verify with `--help`" when a run behaves oddly. Scanner flags which are wrong often fail silently.
 
 ## Contents

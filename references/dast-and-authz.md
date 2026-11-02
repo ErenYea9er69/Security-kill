@@ -1,5 +1,7 @@
 # Proof Rig, DAST and Authorization Testing
 
+Team owner: T14 Red.
+
 Read this in Phase 7, before you launch any scanner or send any attack request. It covers the authorization gate, the proof rig for hypotheses from Phase 6, passive and active scanning, and the two-account authorization probe.
 
 ## Contents

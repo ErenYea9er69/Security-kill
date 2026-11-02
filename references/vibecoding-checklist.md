@@ -1,5 +1,7 @@
 # Failure Classes in AI-Generated Code
 
+Team owner: T13 Slop Hunters, with T03 Access for items 1 to 4.
+
 Read this in Phase 6a. Almost every item here is a configuration or context failure, not a code-logic bug. AI generators optimize for "the feature runs". A missing authorization check never stops the feature from running. This is why SAST alone misses most of these, and why you work this list by hand, one section at a time, with the Attack Card from `attacker-simulation.md`.
 
 The earlier edition of this pack gave frequency percentages for each class, taken from audits and vendor reports. They were not re-verified, so this edition leaves them out. The ranking below follows the same order: items 1 to 4 concentrate the risk. If time runs short, do those four properly.

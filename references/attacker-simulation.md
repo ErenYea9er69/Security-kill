@@ -1,5 +1,7 @@
 # Attacker Simulation Method
 
+Team owner: T01 Cartographer for Step 1, every team for Steps 2 onward.
+
 Read this in Phase 0 to build the section map, in Phase 6 to attack each section, and in Phase 11 to retest. Static review reads code as a document. Attackers read it as a set of doors. This method makes you walk the doors.
 
 ## Contents
@@ -23,14 +25,14 @@ Cutting rules:
 2. Group entry points which share a trust decision. Login, signup, password reset, OTP and session refresh form one section: Identity. Every route which reads or writes an order, invoice or document belongs to the section which owns this object.
 3. Add sections which have no entry point of their own: the data layer (queries, policies, grants), the browser client (what ships to the user), the build and CI pipeline, the agent configuration, secrets handling.
 4. Keep each section under about 300 lines of core logic. Split larger ones by object or by verb.
-5. Give each section an id (S01, S02) and a blast radius score:
+5. Give each section an id (S01, S02), an owner team from `teams.md`, and a blast radius score:
    - Asset value: 1 for public data, 3 for personal data, 5 for money, credentials, or full database access.
    - Reach: 1 for admin only, 3 for any logged-in user, 5 for anonymous.
    - Blast radius is the product. Attack the highest first.
 
 Typical sections for a web app: Identity, Session and tokens, Authorization and tenancy, Payments and webhooks, File handling, Admin and back office, Background jobs and email, Third-party callbacks and outbound fetches, Data layer, Browser client, LLM and agent layer, Build, CI and deploy, Secrets and config.
 
-Write the map to `$TMP/security-audit/section-map.md`, one block per section: id, name, entry points with file and line, assets, blast radius.
+Write the map to `$TMP/security-audit/section-map.md`, one block per section: id, name, owner team, entry points with file and line, assets, blast radius.
 
 ## Step 2: The Attack Card
 

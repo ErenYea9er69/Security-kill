@@ -24,8 +24,8 @@ const referencesDir = path.join(packageRoot, 'references');
 const skillFile = path.join(packageRoot, 'SKILL.md');
 
 export const REFERENCE_DESCRIPTIONS: Record<string, string> = {
-  'evidence-and-truth': 'Truth rules, evidence grading standards (PROVEN, TRACED, LEAD, DISPUTED), and advisory verification procedures.',
-  'attacker-simulation': 'Core attacker simulation methodology, blast-radius ranking, attack cards, and AI agent questions.',
+  'evidence-and-truth': 'Truth rules, evidence grading standards (PROVEN, TRACED, LEAD, DISPUTED), dated research ledger, and advisory verification procedures.',
+  'attacker-simulation': 'Core attacker simulation methodology, section cutting rules, blast-radius ranking, attack cards, and AI agent questions.',
   'section-playbooks': 'Detailed attack moves and verification steps for auth, payments, uploads, data layer, and admin sections.',
   'dast-and-authz': 'Proof rig execution, DAST authorization testing, two-account probing, and non-destructive proof constraints.',
   'fix-patterns': 'Root-cause remediation patterns, shared choke points, and replayable regression tests.',
@@ -36,11 +36,17 @@ export const REFERENCE_DESCRIPTIONS: Record<string, string> = {
   'iac-cloud-config': 'Cloud infrastructure, Docker/container security, GitHub Actions workflows, and TLS/headers.',
   'baas-supabase-firebase': 'Supabase and Firebase security, mandatory Row Level Security (RLS) auditing, and storage rules.',
   'stack-checks': 'Stack-specific security checks for PostgreSQL, Redis, React, Next.js, Go, and Node.js.',
-  'vibecoding-checklist': 'Top 18 failure classes in AI-generated code: missing RLS, IDOR, unauthenticated actions, rate limiting, etc.',
+  'vibecoding-checklist': 'Failure classes in AI-generated code: missing RLS, IDOR, unauthenticated actions, rate limiting, and config oversights.',
   'llm-app-security': 'OWASP LLM Top 10 (2026), prompt injection, insecure output handling, agentic tool authorization.',
   'compliance-mapping': 'Evidence appendix generator for SOC 2, ISO 27001, HIPAA, and PCI-DSS control mappings.',
   'credential-rotation': 'Step-by-step procedures for rotating exposed credentials across major cloud and API providers.',
   'ci-integration': 'Automating security scans in GitHub Actions, GitLab CI, and pre-commit hooks.',
+  'project-profiling': 'Project profiling, flexible team rosters, 12 domain packs, depth tiers, monorepo handling, and resume checkpoints.',
+  'teams': 'The 16 specialist audit teams (T01-T16), operating protocol, brief templates, size tiers, and OWASP ASVS 5.0 chapter mapping.',
+  'scoring': 'The 0 to 10 mathematical scoring engine: penalty formula, weak-link blending, hard caps, assurance levels, slop scores, and path to target score.',
+  'slop-detection': '14 AI slop failure classes (S01-S14), phantom security, fake test detection, mutation testing in scratch space, and slop scoring.',
+  'stack-packs': 'Deep security checks for Python, Java/Spring, PHP, Rails, .NET, Rust/C++, Mobile, Electron/Tauri, Extensions, Serverless, GraphQL, and WebSockets.',
+  'report-template': 'Standardized executive scorecard layout, verdict, path to better score, section heat map, attack chains, and anti-gaming rules.',
 };
 
 /**
@@ -111,4 +117,3 @@ export function getAllReferenceResources(): McpResourceDescriptor[] {
 
   return resources;
 }
-

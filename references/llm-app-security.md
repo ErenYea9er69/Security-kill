@@ -1,5 +1,7 @@
 # LLM and Agent Application Security
 
+Team owner: T10 AI.
+
 Read this in Phase 6b when the app calls an LLM API, runs an agent or hosts an MCP server. Most AI-built apps are AI apps themselves, so this applies often.
 
 ## Numbering: name the year on every id

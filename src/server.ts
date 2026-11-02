@@ -17,6 +17,7 @@ import {
   orchestrateAudit,
   runSlopScan,
 } from './tools/index.js';
+import { generateAuditPromptContent } from './prompts.js';
 
 /**
  * Creates and configures the Security Audit MCP server instance.
@@ -28,7 +29,25 @@ export function createServer(): McpServer {
   });
 
   // ==========================================
-  // 1. Resources (security://...)
+  // 1. Prompts (Slash command / prompt support)
+  // ==========================================
+  server.prompt(
+    'security-audit',
+    'Execute an evidence-based security audit using 16 specialist teams, attacker simulation, and 0-10 scoring',
+    {
+      target_path: z.string().optional().describe('Target repository or folder path (defaults to current directory)'),
+      mode: z.string().optional().describe('Audit mode: full (default), quick, secrets, code, deps, config, attack, slop, llm, dast, score-only, fix, retest'),
+      depth: z.enum(['quick', 'standard', 'deep']).optional().describe('Depth tier: quick (triage), standard (default), deep (full proofs & mutation)'),
+      domain: z.string().optional().describe('Domain focus (e.g. payments, health, saas, ecommerce, ai)'),
+      teams: z.string().optional().describe('Specific team IDs to run, comma-separated (e.g. T02,T03,T09)'),
+      compliance: z.boolean().optional().describe('Whether to generate compliance mapping appendix (SOC2, ISO 27001, HIPAA, PCI-DSS)'),
+      diff: z.boolean().optional().describe('Audit only changed files against the base branch'),
+    },
+    (args) => generateAuditPromptContent(args)
+  );
+
+  // ==========================================
+  // 2. Resources (security://...)
   // ==========================================
   server.resource(
     'security-skill',

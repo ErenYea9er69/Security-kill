@@ -1,9 +1,27 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { generateAuditPromptContent } from '../src/prompts.js';
 import { createServer } from '../src/server.js';
 
 describe('MCP Server & Tools Suite', () => {
-  it('should instantiate McpServer with all registered tools and resources and no legacy prompts', () => {
+  it('should generate comprehensive /security-audit prompt instructions', async () => {
+    const promptData = await generateAuditPromptContent({
+      target_path: './src-app',
+      mode: 'quick',
+      compliance: true,
+      diff: false,
+    });
+
+    assert.ok(promptData.messages.length > 0);
+    const text = promptData.messages[0].content.text;
+    assert.match(text, /Security Audit Directive for \.\/src-app/);
+    assert.match(text, /\*\*Mode:\*\* quick/);
+    assert.match(text, /Truth Rules/i);
+    assert.match(text, /UNTRUSTED/i);
+    assert.match(text, /Active Specialist Teams/i);
+  });
+
+  it('should instantiate McpServer with all registered tools, prompts, and resources', () => {
     const server = createServer();
     assert.ok(server);
     // Verify server has internal tool registrations
@@ -19,8 +37,8 @@ describe('MCP Server & Tools Suite', () => {
     assert.ok(registeredTools['security_audit_generate_report'], 'security_audit_generate_report must be registered');
     assert.ok(registeredTools['security_audit_get_reference'], 'security_audit_get_reference must be registered');
 
-    // Verify no legacy prompt is registered
+    // Verify prompt is registered
     const registeredPrompts = (server as any)._registeredPrompts;
-    assert.strictEqual(registeredPrompts ? Object.keys(registeredPrompts).length : 0, 0);
+    assert.ok(registeredPrompts['security-audit'], 'security-audit prompt must be registered');
   });
 });

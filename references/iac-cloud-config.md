@@ -44,7 +44,7 @@ Trivy is the right default for a small app. One binary covers IaC, Dockerfiles, 
 
 ```bash
 trivy config .
-trivy config --severity HIGH,CRITICAL --format sarif --output "$TMP/security-audit/trivy.sarif" --exit-code 1 .
+trivy config --severity HIGH,CRITICAL --format sarif --output "$TMP/security-kill/trivy.sarif" --exit-code 1 .
 ```
 
 Trivy exits 0 by default even with findings. `--exit-code 1` is required to gate. This is the most common mistake.
@@ -86,7 +86,7 @@ zizmor audits GitHub Actions workflows. Check `zizmor --help` for current flags.
 ```bash
 uv tool install zizmor        # or: pipx install zizmor
 zizmor .
-zizmor --min-severity=medium --format=sarif . > "$TMP/security-audit/zizmor.sarif"
+zizmor --min-severity=medium --format=sarif . > "$TMP/security-kill/zizmor.sarif"
 ```
 
 Its audits map to how CI gets compromised: `unpinned-uses`, `template-injection`, `artipacked` (credential persistence from checkout), `excessive-permissions`, `dangerous-triggers`, `cache-poisoning`, `secrets-inherit`, `bot-conditions`. Its exit codes are non-standard, with distinct codes for findings by severity. Read the docs before you gate on them.

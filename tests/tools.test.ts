@@ -41,7 +41,7 @@ describe('Security Tools Suite', () => {
       assert.strictEqual(plan.domain, 'fintech');
       assert.ok(plan.executionPhases.length >= 10);
       assert.ok(plan.truthRules.length >= 5);
-      assert.match(plan.directive, /Autonomous Security Audit Directive/);
+      assert.match(plan.directive, /Autonomous Security Kill Directive/);
       assert.ok(plan.executionPhases.some((p) => p.name.includes('Tool Inventory')));
     });
   });
@@ -241,7 +241,7 @@ test('admin access test', () => {
   });
 
   describe('Report Generator', () => {
-    it('should generate standardized SECURITY-AUDIT-YYYY-MM-DD.md with scorecard and update .gitignore', async () => {
+    it('should generate standardized SECURITY-KILL-YYYY-MM-DD.md with scorecard and update .gitignore', async () => {
       const repDir = path.join(tempDir, 'rep-proj');
       fs.mkdirSync(repDir);
       fs.writeFileSync(path.join(repDir, '.gitignore'), 'node_modules/\n');
@@ -319,7 +319,7 @@ test('admin access test', () => {
 
       // Verify .gitignore was updated
       const gitignore = fs.readFileSync(path.join(repDir, '.gitignore'), 'utf-8');
-      assert.match(gitignore, /SECURITY-AUDIT-\*\.md/);
+      assert.match(gitignore, /SECURITY-KILL-\*\.md/);
     });
   });
 });

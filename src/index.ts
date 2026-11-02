@@ -19,11 +19,11 @@ async function main() {
 
   await server.connect(transport);
   // Log strictly to stderr so stdio JSON-RPC transport is clean
-  console.error('[security-audit-mcp] Server running on stdio');
+  console.error('[security-kill-mcp] Server running on stdio');
 }
 
 main().catch((error) => {
-  console.error('[security-audit-mcp] Fatal error:', error);
+  console.error('[security-kill-mcp] Fatal error:', error);
   process.exit(1);
 });
 

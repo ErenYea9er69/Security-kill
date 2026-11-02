@@ -105,7 +105,7 @@ function getCommitSha(targetPath: string): string {
 
 function ensureGitignoreEntry(targetPath: string): void {
   const gitignorePath = path.join(targetPath, '.gitignore');
-  const entry = 'SECURITY-AUDIT-*.md';
+  const entry = 'SECURITY-KILL-*.md';
 
   if (!fs.existsSync(gitignorePath)) {
     fs.writeFileSync(gitignorePath, `${entry}\n`, 'utf-8');
@@ -113,7 +113,7 @@ function ensureGitignoreEntry(targetPath: string): void {
   }
 
   const content = fs.readFileSync(gitignorePath, 'utf-8');
-  if (!content.includes('SECURITY-AUDIT-')) {
+  if (!content.includes('SECURITY-KILL-')) {
     const updated = content.endsWith('\n') ? `${content}${entry}\n` : `${content}\n${entry}\n`;
     fs.writeFileSync(gitignorePath, updated, 'utf-8');
   }
@@ -290,16 +290,16 @@ export async function generateAuditReport(options: ReportOptions): Promise<Repor
   }
 
   const reportContent = lines.join('\n');
-  let filename = `SECURITY-AUDIT-${date}.md`;
+  let filename = `SECURITY-KILL-${date}.md`;
   let reportPath = path.join(targetDir, filename);
 
   // Suffix if already exists for today
   if (fs.existsSync(reportPath)) {
     let suffix = 1;
-    while (fs.existsSync(path.join(targetDir, `SECURITY-AUDIT-${date}-${suffix}.md`))) {
+    while (fs.existsSync(path.join(targetDir, `SECURITY-KILL-${date}-${suffix}.md`))) {
       suffix++;
     }
-    filename = `SECURITY-AUDIT-${date}-${suffix}.md`;
+    filename = `SECURITY-KILL-${date}-${suffix}.md`;
     reportPath = path.join(targetDir, filename);
   }
 

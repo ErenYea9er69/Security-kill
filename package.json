@@ -1,11 +1,11 @@
 {
-  "name": "security-audit-mcp",
+  "name": "security-kill-mcp",
   "version": "1.0.0",
-  "description": "Model Context Protocol (MCP) server for deep, evidence-based security audits and attacker simulations",
+  "description": "Model Context Protocol (MCP) server for deep, evidence-based security-kill audits and attacker simulations",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "security-audit-mcp": "./dist/index.js"
+    "security-kill-mcp": "./dist/index.js"
   },
   "files": [
     "dist",
@@ -31,7 +31,7 @@
     "vibecoding",
     "attacker-simulation"
   ],
-  "author": "Security-Audit Authors",
+  "author": "Security-Kill Authors",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",
@@ -43,4 +43,3 @@
     "typescript": "^5.8.2"
   }
 }
-

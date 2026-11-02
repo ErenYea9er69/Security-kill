@@ -233,7 +233,7 @@ Detect:
 ```
 Read each test body. Flags: no assertion, an assertion on the mock itself, a mocked auth layer in a test whose title claims to test authorization, a test which only checks status 200, snapshots as the only check.
 
-Mutation check, for the highest-value guards only. Copy the tracked files into scratch space (`git archive HEAD | tar -x -C "$TMP/security-audit/slopcopy"`), break the guard there (return true, delete the check), and run the test suite in the copy. If the tests still pass, no test covers the guard. Never edit the user's working tree for this. Delete the copy when done.
+Mutation check, for the highest-value guards only. Copy the tracked files into scratch space (`git archive HEAD | tar -x -C "$TMP/security-kill/slopcopy"`), break the guard there (return true, delete the check), and run the test suite in the copy. If the tests still pass, no test covers the guard. Never edit the user's working tree for this. Delete the copy when done.
 
 Report: guards with no covering test, with the mutation as evidence.
 

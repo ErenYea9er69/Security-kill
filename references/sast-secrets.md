@@ -58,8 +58,8 @@ The CLI changed in v8.19 to `git`, `dir` and `stdin`. The older `detect` and `pr
 
 ```bash
 gitleaks git -v .                                   # full history, every commit
-gitleaks git --redact -f json -r "$TMP/security-audit/gitleaks.json" .
-gitleaks git --redact -f sarif -r "$TMP/security-audit/gitleaks.sarif" .
+gitleaks git --redact -f json -r "$TMP/security-kill/gitleaks.json" .
+gitleaks git --redact -f sarif -r "$TMP/security-kill/gitleaks.sarif" .
 gitleaks git --log-opts="--all" .                   # all branches
 gitleaks dir -v .                                   # working tree only, no history
 gitleaks git --pre-commit --staged --redact -v      # for a pre-commit hook
@@ -146,7 +146,7 @@ Users get this backwards. State the order. It applies to exposed secrets only (c
 
 ```bash
 semgrep scan --config p/security-audit --config p/owasp-top-ten --metrics=off .
-semgrep scan --config p/security-audit --error --metrics=off --sarif-output="$TMP/security-audit/semgrep.sarif" .
+semgrep scan --config p/security-audit --error --metrics=off --sarif-output="$TMP/security-kill/semgrep.sarif" .
 semgrep scan --config p/security-audit --baseline-commit=main .
 ```
 

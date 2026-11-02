@@ -32,11 +32,11 @@ Cutting rules:
 
 Typical sections for a web app: Identity, Session and tokens, Authorization and tenancy, Payments and webhooks, File handling, Admin and back office, Background jobs and email, Third-party callbacks and outbound fetches, Data layer, Browser client, LLM and agent layer, Build, CI and deploy, Secrets and config.
 
-Write the map to `$TMP/security-audit/section-map.md`, one block per section: id, name, owner team, entry points with file and line, assets, blast radius.
+Write the map to `$TMP/security-kill/section-map.md`, one block per section: id, name, owner team, entry points with file and line, assets, blast radius.
 
 ## Step 2: The Attack Card
 
-Fill one card per section. Keep it in `$TMP/security-audit/cards/Sxx.md`. The card forces you to attack before you judge.
+Fill one card per section. Keep it in `$TMP/security-kill/cards/Sxx.md`. The card forces you to attack before you judge.
 
 ```
 Section: S03 Authorization and tenancy
@@ -135,7 +135,7 @@ Run these checks on every project, once, in Phase 6. Each takes minutes.
 
 ## The hypothesis ledger
 
-Keep `$TMP/security-audit/ledger.md`. One row per Open or Unknown move.
+Keep `$TMP/security-kill/ledger.md`. One row per Open or Unknown move.
 
 | Id | Section | Attacker | Move | Expected defense | Status | Proof plan | Grade |
 |---|---|---|---|---|---|---|---|

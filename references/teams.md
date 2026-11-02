@@ -15,7 +15,7 @@ You are the Orchestrator. You pick the roster, hand out slices, merge results an
 
 ## Operating protocol
 
-Shared state lives in `$TMP/security-audit/`. Create these files in Phase 0.
+Shared state lives in `$TMP/security-kill/`. Create these files in Phase 0.
 
 | File | Holds | Written by |
 |---|---|---|

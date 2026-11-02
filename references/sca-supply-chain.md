@@ -36,7 +36,7 @@ Do not run every tool. Two overlapping scanners plus the language-native one is 
 
 ```bash
 osv-scanner scan source -r .
-osv-scanner scan source -r . --format sarif --output "$TMP/security-audit/osv.sarif"
+osv-scanner scan source -r . --format sarif --output "$TMP/security-kill/osv.sarif"
 osv-scanner scan source -L package-lock.json
 ```
 
@@ -64,7 +64,7 @@ trivy --version
 trivy fs --scanners vuln .
 trivy fs --scanners vuln,misconfig,secret,license .
 trivy fs --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed .
-trivy fs --format sarif --output "$TMP/security-audit/trivy.sarif" .
+trivy fs --format sarif --output "$TMP/security-kill/trivy.sarif" .
 trivy image myapp:tag
 ```
 

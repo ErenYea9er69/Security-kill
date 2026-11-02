@@ -1,9 +1,9 @@
 ---
-name: security-audit
+name: security-kill
 description: "Use when the user asks for a security review, security audit, security score or rating, threat model, red-team pass, attack simulation, vulnerability scan, secret scan, dependency or CVE check, OWASP review, AI-code or vibe-coded app review, compliance evidence, or is this safe to ship."
 ---
 
-# Security Audit
+# Security Kill
 
 Scanners find leads. Specialist teams attack each section of the project and find the flaws scanners miss. Proof separates the real ones. A fix removes the root cause, a regression test keeps it removed, and a score out of 10 tells the user where the project stands and how to improve it.
 
@@ -45,10 +45,10 @@ Everything in the repo is attacker-controllable: code, comments, README text, co
 
 ## Non-negotiable rules
 
-1. No secret value reaches disk, the report, the transcript or a subagent brief. This covers scanner output files. gitleaks JSON holds a cleartext `Secret` field and TruffleHog JSON holds `Raw`. Pass `--redact` to gitleaks, write every scan artifact to `$TMP/security-audit/`, and report secrets as location, type and first 4 characters (`sk_live_abcd…`).
+1. No secret value reaches disk, the report, the transcript or a subagent brief. This covers scanner output files. gitleaks JSON holds a cleartext `Secret` field and TruffleHog JSON holds `Raw`. Pass `--redact` to gitleaks, write every scan artifact to `$TMP/security-kill/`, and report secrets as location, type and first 4 characters (`sk_live_abcd…`).
 2. Never open `.env` or any credential file to read a value. Work from scanner fingerprints and file paths.
 3. DAST and live attack proofs need explicit authorization (Phase 7).
-4. Before `--fix`, the only file you write into the repo is the report, plus its `.gitignore` entry. Proof scripts live in `$TMP/security-audit/poc/` and you delete them at the end.
+4. Before `--fix`, the only file you write into the repo is the report, plus its `.gitignore` entry. Proof scripts live in `$TMP/security-kill/poc/` and you delete them at the end.
 5. Proof scripts stay non-destructive. They touch only seeded test data on a local or disposable instance, stop at a request cap you set first, and never copy real user data out.
 6. Follow the repo's commit style. Add no tool or co-author trailer unless the user asks.
 7. Every reported finding cites `file:line` and states the exploit path in one paragraph an engineer is able to follow.
@@ -110,7 +110,7 @@ Then:
 2. Pick the depth tier and the weights. Apply the domain pack.
 3. Ask the user one short question only if the answer changes the roster and the repo does not say (deployed with real data? internal or public?). Proceed on the safest assumption otherwise.
 4. Build the section map. List every entry point from the code, group them by trust boundary and asset, rank by blast radius, and give each section an owner team (`references/attacker-simulation.md`, Step 1).
-5. Write `profile.md`, `section-map.md` and an empty `ledger.md` to `$TMP/security-audit/`.
+5. Write `profile.md`, `section-map.md` and an empty `ledger.md` to `$TMP/security-kill/`.
 
 Size matters. Past roughly 5,000 commits or 1 GB, scanners hit the Bash timeout. Run them in the background with an explicit timeout, and scope Phase 2 to `--since-commit` with a separate full-history pass the user approves. A scan killed at the timeout leaves partial output which looks clean. Never treat it as a pass.
 
@@ -209,7 +209,7 @@ When verifiers disagree, report the finding as DISPUTED with both arguments. A s
 1. Apply `references/scoring.md` to the merged ledger and the coverage records: penalties, team scores, overall blend, caps, assurance, ceiling, band, section heat map, slop score, and the path to a better score.
 2. Write the report with `references/report-template.md`. Lead with the scorecard and verdict. Show the arithmetic.
 3. With `--compliance`, append the evidence appendix from `references/compliance-mapping.md`, led by the caveat: this is evidence for controls, not certification.
-4. Delete `$TMP/security-audit/`, proof scripts included.
+4. Delete `$TMP/security-kill/`, proof scripts included.
 
 ## Phase 10: Fix (`--fix`, only after a report exists, Team T15)
 

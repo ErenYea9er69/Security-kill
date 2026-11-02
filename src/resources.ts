@@ -98,8 +98,8 @@ export interface McpResourceDescriptor {
 export function getAllReferenceResources(): McpResourceDescriptor[] {
   const resources: McpResourceDescriptor[] = [
     {
-      uri: 'security://skill',
-      name: 'Security Audit Core Skill',
+      uri: 'security-kill://skill',
+      name: 'Security Kill Core Skill',
       description: 'The master 11-phase security audit workflow, truth rules, and triage guidelines.',
       mimeType: 'text/markdown',
     },
@@ -108,7 +108,7 @@ export function getAllReferenceResources(): McpResourceDescriptor[] {
   const refs = listReferences();
   for (const ref of refs) {
     resources.push({
-      uri: `security://reference/${ref}`,
+      uri: `security-kill://reference/${ref}`,
       name: ref,
       description: REFERENCE_DESCRIPTIONS[ref] || `Security audit reference guide for ${ref}`,
       mimeType: 'text/markdown',

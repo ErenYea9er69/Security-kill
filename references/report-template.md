@@ -1,6 +1,6 @@
 # Report Template
 
-Read this in Phase 9. The Scorekeeper (T16) fills it after `scoring.md` runs. Write the file as `SECURITY-AUDIT-<YYYY-MM-DD>.md` in the project root. Add `SECURITY-AUDIT-*.md` to `.gitignore` first, since the report maps live weaknesses and must never be committed. When today's report exists, add a suffix. Get the date from the environment (`date +%F` or `Get-Date -Format yyyy-MM-dd`). After the report is written, delete `$TMP/security-audit/`, proof scripts included.
+Read this in Phase 9. The Scorekeeper (T16) fills it after `scoring.md` runs. Write the file as `SECURITY-KILL-<YYYY-MM-DD>.md` in the project root. Add `SECURITY-KILL-*.md` to `.gitignore` first, since the report maps live weaknesses and must never be committed. When today's report exists, add a suffix. Get the date from the environment (`date +%F` or `Get-Date -Format yyyy-MM-dd`). After the report is written, delete `$TMP/security-kill/`, proof scripts included.
 
 ## Layout
 

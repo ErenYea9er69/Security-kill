@@ -24,7 +24,7 @@ import { generateAuditPromptContent } from './prompts.js';
  */
 export function createServer(): McpServer {
   const server = new McpServer({
-    name: 'security-audit-mcp',
+    name: 'security-kill-mcp',
     version: '1.0.0',
   });
 
@@ -32,7 +32,7 @@ export function createServer(): McpServer {
   // 1. Prompts (Slash command / prompt support)
   // ==========================================
   server.prompt(
-    'security-audit',
+    'security-kill',
     'Execute an evidence-based security audit using 16 specialist teams, attacker simulation, and 0-10 scoring',
     {
       target_path: z.string().optional().describe('Target repository or folder path (defaults to current directory)'),
@@ -47,11 +47,11 @@ export function createServer(): McpServer {
   );
 
   // ==========================================
-  // 2. Resources (security://...)
+  // 2. Resources (security-kill://...)
   // ==========================================
   server.resource(
-    'security-skill',
-    'security://skill',
+    'security-kill-skill',
+    'security-kill://skill',
     {
       description: 'The master security audit 12-phase workflow, truth rules, and team cards',
       mimeType: 'text/markdown',
@@ -70,7 +70,7 @@ export function createServer(): McpServer {
   for (const ref of listReferences()) {
     server.resource(
       `reference-${ref}`,
-      `security://reference/${ref}`,
+      `security-kill://reference/${ref}`,
       {
         description: `Security audit reference guide: ${ref}`,
         mimeType: 'text/markdown',
@@ -93,7 +93,7 @@ export function createServer(): McpServer {
 
   // Tool: Orchestrate / Plan Audit (Tool-first autonomous entry point)
   server.tool(
-    'security_audit_orchestrate',
+    'security_kill_orchestrate',
     'Generates a complete, tailored 12-phase security audit execution plan, specialist team assignments, truth rules, and recommended tool sequence',
     {
       targetPath: z.string().default('.').describe('Root path of the repository to audit'),
@@ -113,7 +113,7 @@ export function createServer(): McpServer {
 
   // Tool: Preflight Check
   server.tool(
-    'security_audit_preflight',
+    'security_kill_preflight',
     'Checks availability of CLI security scanners (Semgrep, Gitleaks, TruffleHog, Trivy, OSV-Scanner, etc.) and tests with synthetic canaries',
     {
       runCanary: z.boolean().optional().describe('Run synthetic canary tests against present scanners (Phase 1 preflight)'),
@@ -128,7 +128,7 @@ export function createServer(): McpServer {
 
   // Tool: Section Map & Project Profiling (Phase 0)
   server.tool(
-    'security_audit_section_map',
+    'security_kill_section_map',
     'Discovers entry points, frameworks, BaaS (Supabase/Firebase), domains, and maps sections with owner teams (T01-T13)',
     {
       targetPath: z.string().default('.').describe('Root path of the repository to map'),
@@ -143,7 +143,7 @@ export function createServer(): McpServer {
 
   // Tool: Secret Scanner (Phase 2, Team T09)
   server.tool(
-    'security_audit_scan_secrets',
+    'security_kill_scan_secrets',
     'Scans repository for exposed API keys, private keys, and tokens with strict mandatory redaction',
     {
       targetPath: z.string().default('.').describe('Directory path to scan for secrets'),
@@ -160,7 +160,7 @@ export function createServer(): McpServer {
 
   // Tool: SAST Scanner (Phase 3, Team T04)
   server.tool(
-    'security_audit_sast',
+    'security_kill_sast',
     'Executes static analysis for code injection, unsafe execution, and dangerous patterns using Semgrep or built-in rules',
     {
       targetPath: z.string().default('.').describe('Path to source code folder'),
@@ -176,7 +176,7 @@ export function createServer(): McpServer {
 
   // Tool: Dependency / Supply Chain Scanner (Phase 4, Team T07)
   server.tool(
-    'security_audit_scan_deps',
+    'security_kill_scan_deps',
     'Audits dependencies for known vulnerabilities and CVE advisories',
     {
       targetPath: z.string().default('.').describe('Directory containing manifest files (package.json, requirements.txt, etc.)'),
@@ -191,7 +191,7 @@ export function createServer(): McpServer {
 
   // Tool: AI Slop & Fake Test Checker (Phase 6d, Team T13 Slop Hunters)
   server.tool(
-    'security_audit_slop_check',
+    'security_kill_slop_check',
     'Sweeps codebase for the 14 AI failure classes (S01-S14) in references/slop-detection.md (phantom guards, placeholder residue, empty catches, fake assertions, weak crypto)',
     {
       targetPath: z.string().default('.').describe('Directory path of the project to scan for slop'),
@@ -206,7 +206,7 @@ export function createServer(): McpServer {
 
   // Tool: Scoring Engine (Phase 9, Team T16 Scorekeeper)
   server.tool(
-    'security_audit_calculate_score',
+    'security_kill_calculate_score',
     'Computes the mathematical 0-10 security score, binding caps, assurance ceiling, team scores, slop score, and path to target score',
     {
       findings: z.array(
@@ -258,7 +258,7 @@ export function createServer(): McpServer {
 
   // Tool: Reference Fetcher
   server.tool(
-    'security_audit_get_reference',
+    'security_kill_get_reference',
     'Retrieves any of the 23 security playbooks, team cards, or guides (teams, scoring, slop-detection, stack-packs, etc.)',
     {
       name: z.string().describe('Reference playbook name without .md (e.g. teams, scoring, slop-detection, project-profiling)'),
@@ -279,8 +279,8 @@ export function createServer(): McpServer {
 
   // Tool: Report Generator (Phase 9, Team T16 Scorekeeper)
   server.tool(
-    'security_audit_generate_report',
-    'Generates and saves the standardized, evidence-graded SECURITY-AUDIT-YYYY-MM-DD.md report and updates .gitignore',
+    'security_kill_generate_report',
+    'Generates and saves the standardized, evidence-graded SECURITY-KILL-YYYY-MM-DD.md report and updates .gitignore',
     {
       targetPath: z.string().describe('Target repository folder where report will be created'),
       projectName: z.string().optional().describe('Display name of project'),
@@ -297,7 +297,7 @@ export function createServer(): McpServer {
         teamScores: z.record(z.string(), z.number()).optional(),
         weightsChanged: z.string().optional(),
         status: z.string().optional(),
-      }).optional().describe('Scorecard computed via security_audit_calculate_score'),
+      }).optional().describe('Scorecard computed via security_kill_calculate_score'),
       pathToBetterScore: z.array(
         z.object({
           ifYouFix: z.string(),

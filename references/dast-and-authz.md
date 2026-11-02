@@ -32,7 +32,7 @@ Active scanning and attack proofs look the same as an attack to the target. Runn
 4. Prove read flaws with your own canary record, not with another person's data. If a probe returns real personal data by accident, stop, do not store it, and tell the user.
 5. Never run destructive requests (delete, drop, mass update) against data you did not seed.
 6. Redact tokens and secrets in everything you record.
-7. Keep scripts in `$TMP/security-audit/poc/` and delete them at the end of Phase 9.
+7. Keep scripts in `$TMP/security-kill/poc/` and delete them at the end of Phase 9.
 8. Record for each proof: hypothesis id, request, response status and a redacted body excerpt, and what the result shows.
 9. A proof which fails to reproduce does not clear the hypothesis. It moves to Not verified, with a note on what you tried. Only a read of the guard moves it to Refuted.
 

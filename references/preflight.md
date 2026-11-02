@@ -24,7 +24,7 @@ Then check each tool version against its vendor's security advisories. Two scann
 
 ## The canary set
 
-Write these files to `$TMP/security-audit/canary/` (PowerShell: `$env:TEMP\security-audit\canary\`). Everything in them is fabricated. Never put a real credential in a canary. The directory is deleted with the other artifacts at the end of Phase 9.
+Write these files to `$TMP/security-kill/canary/` (PowerShell: `$env:TEMP\security-audit\canary\`). Everything in them is fabricated. Never put a real credential in a canary. The directory is deleted with the other artifacts at the end of Phase 9.
 
 `canary.py` holds SAST sinks and secret formats:
 

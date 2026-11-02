@@ -39,23 +39,23 @@ describe('MCP Resources & References Loader', () => {
   it('should load SKILL.md content', () => {
     const skill = getSkillContent();
     assert.ok(skill !== null);
-    assert.match(skill!, /# Security Audit/);
+    assert.match(skill!, /# Security Kill/);
   });
 
   it('should produce valid MCP resource descriptors', () => {
     const resources = getAllReferenceResources();
     assert.strictEqual(resources.length, 24); // 23 references + 1 core skill
 
-    const skillRes = resources.find((r) => r.uri === 'security://skill');
+    const skillRes = resources.find((r) => r.uri === 'security-kill://skill');
     assert.ok(skillRes);
     assert.strictEqual(skillRes.mimeType, 'text/markdown');
 
-    const teamsRes = resources.find((r) => r.uri === 'security://reference/teams');
+    const teamsRes = resources.find((r) => r.uri === 'security-kill://reference/teams');
     assert.ok(teamsRes);
     assert.strictEqual(teamsRes.name, 'teams');
     assert.strictEqual(teamsRes.mimeType, 'text/markdown');
 
-    const scoringRes = resources.find((r) => r.uri === 'security://reference/scoring');
+    const scoringRes = resources.find((r) => r.uri === 'security-kill://reference/scoring');
     assert.ok(scoringRes);
     assert.strictEqual(scoringRes.name, 'scoring');
     assert.strictEqual(scoringRes.mimeType, 'text/markdown');

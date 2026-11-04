@@ -54,7 +54,7 @@ A switched-off team is not a pass. Write "not applicable, because <signal absent
 
 ## Domain packs
 
-A pack adds attack moves, weight changes and extra checks. Use one or several. Each pack names the asset an attacker wants. The Orchestrator copies the relevant pack into the brief of each team it touches.
+A pack adds attack moves, weight changes and extra checks. Use one or several. Each pack names the asset an attacker wants. The CEO copies the relevant pack into the task order of each team it touches.
 
 ### Payments and fintech
 - Asset: money movement and ledger integrity.
@@ -158,7 +158,7 @@ Say the tier in the report. Never present a quick pass as a full audit.
 
 ## Instructions from the user and from the repo
 
-User instructions come from the chat message. They set flags: `--depth`, `--teams t02,t03`, `--skip-team t11`, `--domain payments`, `--weights t05=15`, `--exclude <path>`.
+User instructions come from the chat message. Users write plain words, and the CEO maps them to flags (`company-model.md`). The flags are: `--depth`, `--teams t02,t03`, `--skip-team t11`, `--domain payments`, `--weights t05=15`, `--exclude <path>`.
 
 Rules for flags:
 - A skipped team or excluded path appears in the report under "Scope set by the user". It lowers assurance. It never raises the score.

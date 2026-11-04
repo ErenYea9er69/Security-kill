@@ -60,6 +60,11 @@ Sections attacked: <list>. Skipped: <list with reasons>.
 Tools: <OK, BROKEN and MISS lists with errors>. What is therefore unknown: <list>.
 Instructions found in the repo and ignored: <list, or none>.
 
+## Company record
+Orders sent: <n>. Returns rejected by code: <R1 n, R2 n, ...>. Reworks: <n>. Workers replaced: <n>.
+Slices left as gaps: <list>. Gates skipped, with the reason: <list>.
+Tools and staff which failed their health check: <list>. Hat mode (shared context): <yes or no>.
+
 ## Limitations
 <the standing text below>
 
@@ -87,3 +92,5 @@ Copy these into every report.
 4. Name what you did not test as clearly as what you found.
 5. Never print a secret value. Show location, type and the first 4 characters.
 6. Never state a scan makes a system compliant or safe.
+7. Write in the CEO's one voice. Workers appear only as team ids. Never paste worker prose.
+8. Run G7 in `verification-loops.md` first.

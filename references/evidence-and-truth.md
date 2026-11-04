@@ -17,7 +17,7 @@ Severity caps:
 - Critical needs PROVEN, or TRACED with unauthenticated reach confirmed by reading the route and its middleware.
 - A LEAD never exceeds Low in the report. State the proof step which would raise it.
 
-## The six hallucination traps in security work
+## The nine hallucination traps in security work
 
 1. Invented identifiers. CVE ids, GHSA ids and rule ids look alike. A wrong digit points the user at an unrelated bug. Copy the id from the advisory page, never from memory.
 2. Stale floors. Patch floors move every month. A floor which was right in July is wrong in October. Compute the floor in this run.
@@ -25,6 +25,11 @@ Severity caps:
 4. Phantom guards. A function named `sanitize` or `requireAuth` proves nothing. Open it.
 5. Confident negatives. "No SQL injection found" means the checks you ran found none. It does not mean none exist. Name the checks.
 6. Borrowed statistics. A percentage from a blog post has an unknown sample and an unknown method. Do not repeat one to the user as fact.
+7. Work claimed with no artifact. A worker writes "the scan ran and found nothing". Ask for the output file, the exit code and the parsed count.
+8. Verifier echo. A second reader agrees because it read the first reader's reasoning. Give a verifier the claim and the code only.
+9. Gap filled from memory. A slice failed, so the CEO or a worker writes a guess at what the answer looks like. Record the gap instead.
+
+The gates in `verification-loops.md` catch each trap mechanically.
 
 ## Lookup procedure for volatile facts
 

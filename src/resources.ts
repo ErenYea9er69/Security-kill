@@ -47,6 +47,9 @@ export const REFERENCE_DESCRIPTIONS: Record<string, string> = {
   'slop-detection': '14 AI slop failure classes (S01-S14), phantom security, fake test detection, mutation testing in scratch space, and slop scoring.',
   'stack-packs': 'Deep security checks for Python, Java/Spring, PHP, Rails, .NET, Rust/C++, Mobile, Electron/Tauri, Extensions, Serverless, GraphQL, and WebSockets.',
   'report-template': 'Standardized executive scorecard layout, verdict, path to better score, section heat map, attack chains, and anti-gaming rules.',
+  'company-model': 'The CEO-led small company model, one-voice rule, org chart, intake mapping, delegation, staff roster, board decisions, and company files.',
+  'task-orders-and-prompts': 'Task order schema, worker return schema, prompt writing rules, tool launch templates, and pipeline gates.',
+  'verification-loops': 'Gates G0 to G7, rejection codes R1 to R8, rework ladder, held rows, depth-tier gating, and gate log table.',
 };
 
 /**

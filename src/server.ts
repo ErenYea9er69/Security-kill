@@ -16,6 +16,22 @@ import {
   generateAuditReport,
   orchestrateAudit,
   runSlopScan,
+  parseUserIntake,
+  auditToolRoster,
+  formatTaskOrder,
+  formatToolLaunch,
+  parseWorkerReturn,
+  verifyG0Order,
+  verifyG1Form,
+  verifyG2Citation,
+  verifyG3Identifier,
+  verifyG4Run,
+  verifyG5KnownAnswer,
+  verifyG6IndependentRecheck,
+  verifyG7CeoFinal,
+  evaluateReworkLadder,
+  COMPANY_AGENTS,
+  getAgentSystemPrompt,
 } from './tools/index.js';
 import { generateAuditPromptContent } from './prompts.js';
 
@@ -364,6 +380,194 @@ export function createServer(): McpServer {
             text: `Report successfully written to ${result.reportPath}\n\nSummary:\n- Date: ${result.date}\n- Findings: ${args.findings.length}\n- Added to .gitignore`,
           },
         ],
+      };
+    }
+  );
+
+  // Tool: CEO Intake Engine
+  server.tool(
+    'security_kill_intake',
+    'CEO intake engine: translates plain user words or options into mandate.md, flags, board decisions, and executive announcement',
+    {
+      userInput: z.string().describe('Plain user request words (e.g. "is this safe to ship", "quick look", "check my keys", "test the live site https://...")'),
+      targetPath: z.string().default('.').describe('Root path of the repository to audit'),
+      existingReportExists: z.boolean().optional().describe('Whether an existing audit report is already present'),
+      cliFlags: z.object({
+        mode: z.string().optional(),
+        depth: z.enum(['quick', 'standard', 'deep']).optional(),
+        domain: z.string().optional(),
+        teams: z.string().optional(),
+        compliance: z.boolean().optional(),
+        diff: z.boolean().optional(),
+        dastUrl: z.string().optional(),
+      }).optional(),
+    },
+    async ({ userInput, targetPath, existingReportExists, cliFlags }) => {
+      const result = parseUserIntake(userInput, { targetPath, existingReportExists, cliFlags });
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      };
+    }
+  );
+
+  // Tool: O02 Tool Desk Staff Roster
+  server.tool(
+    'security_kill_tool_roster',
+    'O02 Tool Desk roster manager: returns staff roster job cards and runs synthetic canary health checks across scanners, MCP servers, and pipelines',
+    {
+      runHealthChecks: z.boolean().default(true).describe('Whether to execute live health checks on scanners and tools'),
+    },
+    async () => {
+      const result = await auditToolRoster();
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      };
+    }
+  );
+
+  // Tool: Dispatch Task Order & Tool Launch (CEO)
+  server.tool(
+    'security_kill_dispatch_order',
+    'CEO Task Order and Tool Launch dispatcher: validates against Gate G0 (mission, slice, budget, done test) and formats order',
+    {
+      orderType: z.enum(['task_order', 'tool_launch']).default('task_order').describe('Type of order to issue'),
+      taskOrder: z.object({
+        id: z.string().describe('Order ID, e.g. O-014'),
+        phase: z.union([z.number(), z.string()]).describe('Phase number (e.g. 6 or 6d)'),
+        team: z.string().describe('Target specialist team (e.g. T03 Access)'),
+        mission: z.string().describe('One sentence naming the asset and attacker goal'),
+        slice: z.string().describe('Sections or path scope'),
+        inputs: z.array(z.string()).default([]),
+        knowledge: z.array(z.string()).default([]),
+        staffAllowed: z.array(z.string()).default([]),
+        staffForbidden: z.array(z.string()).default([]),
+        method: z.array(z.string()).default([]),
+        outputFile: z.string().describe('e.g. returns/O-014.md'),
+        doneTest: z.string().describe('Objective done test for CEO / script verification'),
+        budget: z.object({
+          maxFiles: z.number().optional(),
+          maxToolCalls: z.number().optional(),
+          timeoutMinutes: z.number().optional(),
+        }).default({}),
+        reworkNotes: z.array(z.string()).optional(),
+      }).optional(),
+      toolLaunch: z.object({
+        id: z.string().describe('Launch ID, e.g. L-007'),
+        staff: z.string().describe('Tool or staff name, e.g. gitleaks'),
+        orderId: z.string().describe('Parent order ID, e.g. O-009'),
+        command: z.string().describe('Exact CLI command with redaction flags'),
+        workingDirectory: z.string().describe('Explicit target path'),
+        outputPath: z.string().describe('Artifact path under $TMP/security-kill/scan/'),
+        timeoutSeconds: z.number().default(120),
+        healthState: z.string().default('OK'),
+        parseRule: z.string().default('Count findings by script, never by summary line'),
+        egress: z.string().default('none'),
+      }).optional(),
+    },
+    async ({ orderType, taskOrder, toolLaunch }) => {
+      if (orderType === 'task_order' && taskOrder) {
+        const g0 = verifyG0Order(taskOrder as any);
+        const formatted = formatTaskOrder(taskOrder as any);
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ g0, formatted }, null, 2) }],
+        };
+      } else if (orderType === 'tool_launch' && toolLaunch) {
+        const g0 = verifyG0Order(toolLaunch as any);
+        const formatted = formatToolLaunch(toolLaunch as any);
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ g0, formatted }, null, 2) }],
+        };
+      }
+      return {
+        content: [{ type: 'text', text: 'Error: Must provide taskOrder or toolLaunch data' }],
+        isError: true,
+      };
+    }
+  );
+
+  // Tool: Gates G0-G7 Verification Loops
+  server.tool(
+    'security_kill_verify_gate',
+    'Verification Loops Gatekeeper: executes mechanical Gate checks G0 through G7 with rejection codes R1-R8 and rework ladder tracking',
+    {
+      gate: z.enum(['G0', 'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7']).describe('Gate identifier to evaluate'),
+      returnMarkdown: z.string().optional().describe('Raw markdown of worker return (returns/<id>.md) for G1-G4'),
+      repoRoot: z.string().optional().describe('Repository root path for G2 citation verification'),
+      baseScanDir: z.string().optional().describe('Base scan directory for G4 artifact verification'),
+      currentReworkRound: z.number().default(0).describe('Current rework attempt count (0 = first return, 1 = first rework)'),
+      g5Options: z.object({
+        testedSection: z.string(),
+        plantedFlawCaught: z.boolean(),
+        repeatedFalsePremise: z.boolean().optional(),
+      }).optional(),
+      g6Options: z.object({
+        findingId: z.string(),
+        severity: z.enum(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']),
+        originalEvidence: z.string(),
+        verifierVerdict: z.enum(['Confirmed', 'Refuted', 'Undecided']),
+        reproducedBySecondWorker: z.boolean(),
+      }).optional(),
+      g7Checklist: z.object({
+        allFindingsCiteOpenedFile: z.boolean(),
+        allNumbersAndVersionsSourced: z.boolean(),
+        scoringArithmeticRecomputed: z.boolean(),
+        allCriticalHighPassedG2ToG6: z.boolean(),
+        noHeldRowsInScore: z.boolean(),
+        coverageListsAllSkippedTeams: z.boolean(),
+        noRepoInstructionsObeyed: z.boolean(),
+        reportTextScannedCleanOfSecrets: z.boolean(),
+        reworkCountsRecorded: z.boolean(),
+      }).optional(),
+    },
+    async ({ gate, returnMarkdown, repoRoot, baseScanDir, currentReworkRound, g5Options, g6Options, g7Checklist }) => {
+      let result: any;
+      const parsedReturn = returnMarkdown ? parseWorkerReturn(returnMarkdown) : null;
+
+      if (gate === 'G1') {
+        result = parsedReturn ? verifyG1Form(parsedReturn) : { gate: 'G1', passed: false, defects: [{ code: 'R1', description: 'Missing returnMarkdown' }], summary: 'No return provided' };
+      } else if (gate === 'G2') {
+        result = parsedReturn ? verifyG2Citation(parsedReturn, repoRoot || '.') : { gate: 'G2', passed: false, defects: [{ code: 'R2', description: 'Missing returnMarkdown' }], summary: 'No return provided' };
+      } else if (gate === 'G3') {
+        result = parsedReturn ? verifyG3Identifier(parsedReturn) : { gate: 'G3', passed: false, defects: [{ code: 'R3', description: 'Missing returnMarkdown' }], summary: 'No return provided' };
+      } else if (gate === 'G4') {
+        result = parsedReturn ? verifyG4Run(parsedReturn, baseScanDir) : { gate: 'G4', passed: false, defects: [{ code: 'R4', description: 'Missing returnMarkdown' }], summary: 'No return provided' };
+      } else if (gate === 'G5' && g5Options) {
+        result = verifyG5KnownAnswer(g5Options);
+      } else if (gate === 'G6' && g6Options) {
+        result = verifyG6IndependentRecheck(g6Options);
+      } else if (gate === 'G7' && g7Checklist) {
+        result = verifyG7CeoFinal(g7Checklist);
+      } else {
+        result = { gate, passed: false, defects: [{ code: 'R1', description: `Invalid or incomplete arguments for gate ${gate}` }], summary: `Gate ${gate} evaluation failed: incomplete parameters` };
+      }
+
+      const reworkDecision = result.passed ? null : evaluateReworkLadder(result.defects, currentReworkRound);
+
+      return {
+        content: [{ type: 'text', text: JSON.stringify({ gateResult: result, reworkDecision }, null, 2) }],
+      };
+    }
+  );
+
+  // Tool: Antigravity Agent Definitions
+  server.tool(
+    'security_kill_get_agent',
+    'Returns the complete agent definition, mission, allowed tools, forbidden actions, return schema, and Antigravity system prompt for any company agent (CEO, O01, O02, T01..T16)',
+    {
+      agentId: z.string().describe('Agent ID, e.g. CEO, O01, O02, T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12, T13, T14, T15, T16'),
+    },
+    async ({ agentId }) => {
+      const key = agentId.toUpperCase();
+      const agent = COMPANY_AGENTS[key];
+      if (!agent) {
+        return {
+          content: [{ type: 'text', text: `Agent '${agentId}' not found. Available: ${Object.keys(COMPANY_AGENTS).join(', ')}` }],
+          isError: true,
+        };
+      }
+      const systemPrompt = getAgentSystemPrompt(key);
+      return {
+        content: [{ type: 'text', text: JSON.stringify({ ...agent, systemPrompt }, null, 2) }],
       };
     }
   );

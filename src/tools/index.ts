@@ -5,6 +5,7 @@ export * from './preflight.js';
 export * from './sectionMap.js';
 export * from './secrets.js';
 export * from './reporter.js';
+export * from '../company/index.js';
 
 import fs from 'node:fs';
 import path from 'node:path';

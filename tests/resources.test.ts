@@ -8,9 +8,9 @@ import {
 } from '../src/resources.js';
 
 describe('MCP Resources & References Loader', () => {
-  it('should list all 23 reference names', () => {
+  it('should list all 26 reference names', () => {
     const refs = listReferences();
-    assert.strictEqual(refs.length, 23);
+    assert.strictEqual(refs.length, 26);
     assert.ok(refs.includes('preflight'));
     assert.ok(refs.includes('sast-secrets'));
     assert.ok(refs.includes('vibecoding-checklist'));
@@ -23,6 +23,9 @@ describe('MCP Resources & References Loader', () => {
     assert.ok(refs.includes('project-profiling'));
     assert.ok(refs.includes('stack-packs'));
     assert.ok(refs.includes('report-template'));
+    assert.ok(refs.includes('company-model'));
+    assert.ok(refs.includes('task-orders-and-prompts'));
+    assert.ok(refs.includes('verification-loops'));
   });
 
   it('should load content for an existing reference', () => {
@@ -44,7 +47,7 @@ describe('MCP Resources & References Loader', () => {
 
   it('should produce valid MCP resource descriptors', () => {
     const resources = getAllReferenceResources();
-    assert.strictEqual(resources.length, 24); // 23 references + 1 core skill
+    assert.strictEqual(resources.length, 27); // 26 references + 1 core skill
 
     const skillRes = resources.find((r) => r.uri === 'security-kill://skill');
     assert.ok(skillRes);

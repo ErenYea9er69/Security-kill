@@ -36,6 +36,11 @@ describe('MCP Server & Tools Suite', () => {
     assert.ok(registeredTools['security_kill_calculate_score'], 'security_kill_calculate_score must be registered');
     assert.ok(registeredTools['security_kill_generate_report'], 'security_kill_generate_report must be registered');
     assert.ok(registeredTools['security_kill_get_reference'], 'security_kill_get_reference must be registered');
+    assert.ok(registeredTools['security_kill_intake'], 'security_kill_intake must be registered');
+    assert.ok(registeredTools['security_kill_tool_roster'], 'security_kill_tool_roster must be registered');
+    assert.ok(registeredTools['security_kill_dispatch_order'], 'security_kill_dispatch_order must be registered');
+    assert.ok(registeredTools['security_kill_verify_gate'], 'security_kill_verify_gate must be registered');
+    assert.ok(registeredTools['security_kill_get_agent'], 'security_kill_get_agent must be registered');
 
     // Verify prompt is registered
     const registeredPrompts = (server as any)._registeredPrompts;
